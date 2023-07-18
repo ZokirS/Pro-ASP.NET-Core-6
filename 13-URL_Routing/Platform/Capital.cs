@@ -2,42 +2,38 @@
 {
     public class Capital
     {
-        private RequestDelegate next;
+    //    private RequestDelegate next;
 
-        public Capital(){}
+    //    public Capital(){}
 
-        public Capital(RequestDelegate request)
-            => next = request;
+    //    public Capital(RequestDelegate request)
+    //        => next = request;
 
-        public async Task Invoke(HttpContext context)
+        public static async Task Endpoint(HttpContext context)
         {
-            string[] parts = context.Request.Path.ToString()
-                .Split('/', StringSplitOptions.RemoveEmptyEntries);
-
-            if(parts.Length == 2 && parts[0]=="capital" )
+            string? capital = null;
+            string? country = context.Request.RouteValues["country"] as string;
+            switch((country ?? "").ToLower())
             {
-                string? capital = null;
-                string country = parts[1];
-                switch(country.ToLower())
-                {
-                    case "uk":
-                        capital = "London";
-                        break;
-                    case "france":
-                        capital= "Paris";
-                        break;
-                    case "monaco":
-                        context.Response.Redirect($"/population/{country}");
-                        break;
-                }
-                if(capital != null)
-                {
-                    await context.Response.WriteAsync($"{capital} is a capital of {country}");
+                case "uk":
+                    capital = "london";
+                    break;
+                case "france":
+                    capital = "paris";
+                    break;
+                case "monaco":
+                    LinkGenerator? linkGenerator =
+                        context.RequestServices.GetService<LinkGenerator>();
+                    string? url = linkGenerator?.GetPathByRouteValues(context,
+                        "population", new { city = country });
+                    if (url != null) 
+                        context.Response.Redirect(url);
                     return;
-                }
             }
-            if(next != null)
-                await next(context);
+            if (capital != null)
+                await context.Response.WriteAsync($"{capital} is capital of {country}");
+            else
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
         }
     }
 }
