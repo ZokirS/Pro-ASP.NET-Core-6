@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-
+builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
 var app = builder.Build();
 
 app.UseMiddleware<WeatherMiddleware>();
@@ -33,13 +33,28 @@ app.UseMiddleware<WeatherMiddleware>();
 //    "Endpoint Function: It is sunny in LA");
 //});
 
-app.MapGet("middleware/function", async (context) =>
+//app.MapGet("middleware/function", async (context) =>
+//{
+//    await TypeBroker.Formatter.Format(context, "Middleware function: rain in Chicago");
+//});
+
+//app.MapGet("endpoint/function", async (context) =>
+//{
+//    await TypeBroker.Formatter.Format(context, "Endpoint function: rain in Chicago");
+//});
+
+//Using Dependency Injection
+
+app.MapGet("middleware/function", async (HttpContext context,
+    IResponseFormatter formatter) =>
 {
-    await TypeBroker.Formatter.Format(context, "Middleware function: rain in Chicago");
+    await formatter.Format(context, "Middleware function: rain in Chicago");
 });
 
-app.MapGet("endpoint/function", async (context) =>
+app.MapGet("endpoint/function", async (HttpContext context,
+    IResponseFormatter formatter) =>
 {
-    await TypeBroker.Formatter.Format(context, "Endpoint function: rain in Chicago");
+    await formatter.Format(context, "Endpoint function: rain in Chicago");
 });
+app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
 app.Run();

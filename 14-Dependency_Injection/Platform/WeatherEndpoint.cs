@@ -1,11 +1,14 @@
-﻿namespace _14_Dependency_Injection.Platform
+﻿using _14_Dependency_Injection.Platform.Services;
+
+namespace _14_Dependency_Injection.Platform
 {
     public class WeatherEndpoint
     {
         public static async Task Endpoint(HttpContext context)
         {
-            await context.Response
-                .WriteAsync("Endpoint class: It is cloudy in Milan");
+            IResponseFormatter formatter =
+                context.RequestServices.GetRequiredService<IResponseFormatter>();
+            await formatter.Format(context, "Endpoint Class: dasda");
         }
     }
 }
