@@ -4,15 +4,15 @@ namespace _14_Dependency_Injection.Platform
 {
     public class WeatherEndpoint
     {
-        private readonly IResponseFormatter _responseFormatter;
+        //private readonly IResponseFormatter _responseFormatter;
 
-        public WeatherEndpoint(IResponseFormatter responseFormatter)
-            => _responseFormatter = responseFormatter;
+        //public WeatherEndpoint(IResponseFormatter responseFormatter)
+        //    => _responseFormatter = responseFormatter;
         
 
-        public async Task Endpoint(HttpContext context)
+        public async Task Endpoint(HttpContext context, IResponseFormatter formatter)
         {
-            await _responseFormatter.Format(context, "Endpoint Class: dasda");
+            await formatter.Format(context, "Endpoint Class: dasda");
         }
     }
 }

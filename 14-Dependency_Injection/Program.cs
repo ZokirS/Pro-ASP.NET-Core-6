@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
+builder.Services.AddScoped<IResponseFormatter, GuidService>();
 var app = builder.Build();
 
 app.UseMiddleware<WeatherMiddleware>();
@@ -51,12 +51,12 @@ app.MapGet("middleware/function", async (HttpContext context,
     await formatter.Format(context, "Middleware function: rain in Chicago");
 });
 
-app.MapGet("endpoint/function", async (HttpContext context,
-    IResponseFormatter formatter) =>
+app.MapGet("endpoint/function", async (HttpContext context) =>
 {
-    await formatter.Format(context, "Endpoint function: rain in Chicago");
+    IResponseFormatter formatter = context.RequestServices.GetService<IResponseFormatter>();
+    await formatter.Format(context, "Endpoint function: it's rainy in LA");
 });
 //app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
 //app.MapWeather("endpoint/class");
-app.MapWeather<WeatherEndpoint>("endpoint/class");
+app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 app.Run();
