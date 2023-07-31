@@ -1,11 +1,24 @@
 using _14_Dependency_Injection.Platform;
 using _14_Dependency_Injection.Platform.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IResponseFormatter, GuidService>();
+
+//Using Service Factory Functions
+
+IConfiguration config = builder.Configuration;
+
+builder.Services.AddScoped<IResponseFormatter>(serviceProvider =>
+{
+    string? typeName = config["services:IResponseFormatter"];
+    return (IResponseFormatter)ActivatorUtilities
+    .CreateInstance(serviceProvider, typeName == null
+    ? typeof(GuidService) : Type.GetType(typeName, true)!);
+});
 var app = builder.Build();
 
 app.UseMiddleware<WeatherMiddleware>();
