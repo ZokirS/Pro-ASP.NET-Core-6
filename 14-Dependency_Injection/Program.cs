@@ -12,16 +12,34 @@ builder.Services.AddScoped<IResponseFormatter, GuidService>();
 
 IConfiguration config = builder.Configuration;
 
-builder.Services.AddScoped<IResponseFormatter>(serviceProvider =>
-{
-    string? typeName = config["services:IResponseFormatter"];
-    return (IResponseFormatter)ActivatorUtilities
-    .CreateInstance(serviceProvider, typeName == null
-    ? typeof(GuidService) : Type.GetType(typeName, true)!);
-});
+//builder.Services.AddScoped<IResponseFormatter>(serviceProvider =>
+//{
+//    string? typeName = config["services:IResponseFormatter"];
+//    return (IResponseFormatter)ActivatorUtilities
+//    .CreateInstance(serviceProvider, typeName == null
+//    ? typeof(GuidService) : Type.GetType(typeName, true)!);
+//});
+
+//Creating Services with Multiple Implementations
+
+builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
+builder.Services.AddScoped<IResponseFormatter, GuidService>();
+builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
 var app = builder.Build();
 
-app.UseMiddleware<WeatherMiddleware>();
+//app.UseMiddleware<WeatherMiddleware>();
+
+app.MapGet("single", async context =>
+{
+    IResponseFormatter formatter = context.RequestServices.GetService<IResponseFormatter>();
+    await formatter.Format(context, "Single service");
+});
+
+app.MapGet("/", async context =>
+{
+    IResponseFormatter formatter = context.RequestServices.GetServices<IResponseFormatter>().Last(x => x.RichOutput);
+    await formatter.Format(context, "Multiple format");
+});
 //IResponseFormatter formatter = new TextResponseFormatter();
 //app.MapGet("middleware/function", async (context) =>
 //{
@@ -58,18 +76,20 @@ app.UseMiddleware<WeatherMiddleware>();
 
 //Using Dependency Injection
 
-app.MapGet("middleware/function", async (HttpContext context,
-    IResponseFormatter formatter) =>
-{
-    await formatter.Format(context, "Middleware function: rain in Chicago");
-});
+//app.MapGet("middleware/function", async (HttpContext context,
+//    IResponseFormatter formatter) =>
+//{
+//    await formatter.Format(context, "Middleware function: rain in Chicago");
+//});
 
-app.MapGet("endpoint/function", async (HttpContext context) =>
-{
-    IResponseFormatter formatter = context.RequestServices.GetService<IResponseFormatter>();
-    await formatter.Format(context, "Endpoint function: it's rainy in LA");
-});
+//app.MapGet("endpoint/function", async (HttpContext context) =>
+//{
+//    IResponseFormatter formatter = context.RequestServices.GetService<IResponseFormatter>();
+//    await formatter.Format(context, "Endpoint function: it's rainy in LA");
+//});
 //app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
 //app.MapWeather("endpoint/class");
 app.MapEndpoint<WeatherEndpoint>("endpoint/class");
+
+//Creating Services with Multiple Implementations
 app.Run();
