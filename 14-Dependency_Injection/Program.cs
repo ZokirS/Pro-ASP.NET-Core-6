@@ -2,15 +2,15 @@ using _14_Dependency_Injection.Platform;
 using _14_Dependency_Injection.Platform.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-var builder = WebApplication.CreateBuilder(args);
+//var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddScoped<IResponseFormatter, GuidService>();
+//// Add services to the container.
+//builder.Services.AddRazorPages();
+//builder.Services.AddScoped<IResponseFormatter, GuidService>();
 
 //Using Service Factory Functions
 
-IConfiguration config = builder.Configuration;
+//IConfiguration config = builder.Configuration;
 
 //builder.Services.AddScoped<IResponseFormatter>(serviceProvider =>
 //{
@@ -22,24 +22,24 @@ IConfiguration config = builder.Configuration;
 
 //Creating Services with Multiple Implementations
 
-builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
-builder.Services.AddScoped<IResponseFormatter, GuidService>();
-builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
-var app = builder.Build();
+//builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
+//builder.Services.AddScoped<IResponseFormatter, GuidService>();
+//builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
+//var app = builder.Build();
 
 //app.UseMiddleware<WeatherMiddleware>();
 
-app.MapGet("single", async context =>
-{
-    IResponseFormatter formatter = context.RequestServices.GetService<IResponseFormatter>();
-    await formatter.Format(context, "Single service");
-});
+//app.MapGet("single", async context =>
+//{
+//    IResponseFormatter formatter = context.RequestServices.GetService<IResponseFormatter>();
+//    await formatter.Format(context, "Single service");
+//});
 
-app.MapGet("/", async context =>
-{
-    IResponseFormatter formatter = context.RequestServices.GetServices<IResponseFormatter>().Last(x => x.RichOutput);
-    await formatter.Format(context, "Multiple format");
-});
+//app.MapGet("/", async context =>
+//{
+//    IResponseFormatter formatter = context.RequestServices.GetServices<IResponseFormatter>().Last(x => x.RichOutput);
+//    await formatter.Format(context, "Multiple format");
+//});
 //IResponseFormatter formatter = new TextResponseFormatter();
 //app.MapGet("middleware/function", async (context) =>
 //{
@@ -89,7 +89,18 @@ app.MapGet("/", async context =>
 //});
 //app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
 //app.MapWeather("endpoint/class");
-app.MapEndpoint<WeatherEndpoint>("endpoint/class");
+//app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 
 //Creating Services with Multiple Implementations
+
+
+
+
+//Chapter 15 - Using the Platform Features, Part 1
+
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+app.MapGet("/", async context => {
+    await context.Response.WriteAsync("Hello World!");
+});
 app.Run();
