@@ -3,6 +3,7 @@ using _14_Dependency_Injection.Platform;
 using _14_Dependency_Injection.Platform.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.FileProviders;
 
 //var builder = WebApplication.CreateBuilder(args);
 
@@ -108,8 +109,8 @@ builder.Services.AddHttpLogging(opts =>
 });
 var app = builder.Build();
 app.UseHttpLogging();
-var logger = app.Services
-.GetRequiredService<ILoggerFactory>().CreateLogger("Pipeline");
+var env = app.Environment;
+app.UseStaticFiles();
 //logger.LogDebug("Pipeline configuration starting");
 app.MapGet("population/{city?}", Population.Endpoint);
 //logger.LogDebug("Pipeline configuration complete");
