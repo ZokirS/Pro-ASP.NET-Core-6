@@ -1,11 +1,29 @@
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(opts =>
+{
+    opts.IdleTimeout = TimeSpan.FromMinutes(30);
+    opts.Cookie.IsEssential = true;
+});
 
 builder.Services.Configure<CookiePolicyOptions>(opts =>
 opts.CheckConsentNeeded = context => true);
 
-var app = builder.Build();
 
+var app = builder.Build();
+app.UseSession();
 app.UseCookiePolicy();
+app.UseMiddleware<_16_Platform_Features2.Platform.ConsentMiddleware>();
+
+app.MapGet("/session", async context =>
+{
+    int counter1 = (context.Session.GetInt32("counter1") ?? 0) + 1;
+    int counter2 = (context.Session.GetInt32("counter2") ?? 0) + 1;
+    context.Session.SetInt32("counter1", counter1);
+    context.Session.SetInt32("counter2", counter2);
+    await context.Session.CommitAsync();
+    await context.Response.WriteAsync($"Counter: {counter1}, counter2: {counter2}");
+});
 app.MapGet("cookie", async context =>
 {
     int counter1 =
