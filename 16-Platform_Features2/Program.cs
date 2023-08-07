@@ -9,8 +9,8 @@ builder.Services.AddSession(opts =>
 builder.Services.Configure<CookiePolicyOptions>(opts =>
 opts.CheckConsentNeeded = context => true);
 
-
 var app = builder.Build();
+app.UseHttpsRedirection();
 app.UseSession();
 app.UseCookiePolicy();
 app.UseMiddleware<_16_Platform_Features2.Platform.ConsentMiddleware>();
@@ -52,7 +52,9 @@ app.MapGet("clear", context =>
     context.Response.Redirect("/");
     return Task.CompletedTask;
 });
-app.MapFallback(async context =>
-await context.Response.WriteAsync("Hello World!"));
-
+app.MapFallback(async context => {
+    await context.Response
+    .WriteAsync($"HTTPS Request: {context.Request.IsHttps} \n");
+    await context.Response.WriteAsync("Hello World!");
+});
 app.Run();
