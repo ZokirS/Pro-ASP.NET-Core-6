@@ -1,3 +1,5 @@
+using _16_Platform_Features2.Platform;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(opts =>
@@ -6,14 +8,38 @@ builder.Services.AddSession(opts =>
     opts.Cookie.IsEssential = true;
 });
 
+builder.Services.AddHsts(opts =>
+{
+    opts.MaxAge = TimeSpan.FromDays(1);
+    opts.IncludeSubDomains = true;
+});
+
 builder.Services.Configure<CookiePolicyOptions>(opts =>
 opts.CheckConsentNeeded = context => true);
 
 var app = builder.Build();
-app.UseHttpsRedirection();
-app.UseSession();
-app.UseCookiePolicy();
-app.UseMiddleware<_16_Platform_Features2.Platform.ConsentMiddleware>();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/error.html");
+    app.UseStaticFiles();
+}
+
+app.UseStatusCodePages("text/html", ResponseStrings.DefaultResponse);
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/error")
+    {
+        context.Response.StatusCode = StatusCodes.Status404NotFound;
+        await Task.CompletedTask;
+    }
+    else
+        await next();
+});
+app.Run(context => {
+    throw new Exception("Something has gone wrong");
+});
 
 app.MapGet("/session", async context =>
 {
@@ -51,10 +77,5 @@ app.MapGet("clear", context =>
     context.Response.Cookies.Delete("counter2");
     context.Response.Redirect("/");
     return Task.CompletedTask;
-});
-app.MapFallback(async context => {
-    await context.Response
-    .WriteAsync($"HTTPS Request: {context.Request.IsHttps} \n");
-    await context.Response.WriteAsync("Hello World!");
 });
 app.Run();
