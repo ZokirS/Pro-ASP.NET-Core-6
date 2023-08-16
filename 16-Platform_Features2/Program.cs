@@ -1,4 +1,5 @@
 using _16_Platform_Features2.Platform;
+using Microsoft.AspNetCore.HostFiltering;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDistributedMemoryCache();
@@ -13,7 +14,11 @@ builder.Services.AddHsts(opts =>
     opts.MaxAge = TimeSpan.FromDays(1);
     opts.IncludeSubDomains = true;
 });
-
+builder.Services.Configure<HostFilteringOptions>(opts =>
+{
+    opts.AllowedHosts.Clear();
+    opts.AllowedHosts.Add("*.example.com");
+});
 builder.Services.Configure<CookiePolicyOptions>(opts =>
 opts.CheckConsentNeeded = context => true);
 
