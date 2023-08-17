@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "13-URL_Routing", "13-URL_Ro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "14-Dependency_Injection", "14-Dependency_Injection\14-Dependency_Injection.csproj", "{3BC32142-D97A-47F4-B300-3A8CC02CC632}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "16-Platform_Features2", "16-Platform_Features2\16-Platform_Features2.csproj", "{AA520FDB-EE25-4C41-8DB9-B11B60C16EEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "16-Platform_Features2", "16-Platform_Features2\16-Platform_Features2.csproj", "{AA520FDB-EE25-4C41-8DB9-B11B60C16EEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "17-Working_whth_Data", "17-Working_whth_Data\17-Working_whth_Data.csproj", "{D3AB86A6-023A-4FF4-BCF4-5C580CB739E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{AA520FDB-EE25-4C41-8DB9-B11B60C16EEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA520FDB-EE25-4C41-8DB9-B11B60C16EEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA520FDB-EE25-4C41-8DB9-B11B60C16EEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3AB86A6-023A-4FF4-BCF4-5C580CB739E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3AB86A6-023A-4FF4-BCF4-5C580CB739E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3AB86A6-023A-4FF4-BCF4-5C580CB739E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3AB86A6-023A-4FF4-BCF4-5C580CB739E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
