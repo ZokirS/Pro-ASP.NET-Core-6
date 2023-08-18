@@ -1,4 +1,4 @@
-﻿namespace _14_Dependency_Injection.Platform.Services
+﻿namespace _17_Working_whth_Data.Platform.Services
 {
     public class GuidService : IResponseFormatter
     {

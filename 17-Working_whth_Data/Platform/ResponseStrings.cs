@@ -1,4 +1,4 @@
-﻿namespace _16_Platform_Features2.Platform
+﻿namespace _17_Working_whth_Data.Platform
 {
     public static class ResponseStrings
     {

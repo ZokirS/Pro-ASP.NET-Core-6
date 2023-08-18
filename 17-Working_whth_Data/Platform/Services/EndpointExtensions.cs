@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace _14_Dependency_Injection.Platform.Services
+namespace _17_Working_whth_Data.Platform.Services
 {
     public static class EndpointExtensions
     {
